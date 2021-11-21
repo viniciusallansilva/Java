@@ -21,6 +21,7 @@ public class Game {
 	
 	private void drawBoard() {
 		System.out.println("What you want do?\n");
+		//printInformationToPlayer();
 	}
 	
 	private void readInput() {
@@ -31,6 +32,6 @@ public class Game {
 	}
 	
 	private void updateBoard() {
-	
+		System.out.println("Comando efetuado, aguarde!\n");
 	}
 }
