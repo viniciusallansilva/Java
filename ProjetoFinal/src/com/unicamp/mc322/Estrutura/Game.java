@@ -9,24 +9,24 @@ public class Game {
 	private boolean exitSelected;
 	
 	Scanner read=new Scanner(System.in);
-	StageSequence main=new StageSequence();
-	
+	Configuracao config=new Configuracao();
+	Exploration explore=new Exploration();
+
 	public void start() {
 		exitSelected =false;
-		System.out.println("Game started!\n");
+		System.out.println("Jogo Iniciado!\n");
+		//
 		
-		main.atualiza();
 		while(!exitSelected) {
 			drawBoard();
 			updateBoard(readInput());
 		}
-		System.out.println("Game terminated. Bye!\n");
+		System.out.println("Jogo Terminado. Tchau!\n");
 	}
 	
 	private void drawBoard() {
-		main.atualiza();
-		System.out.println("What you want do?\n");
-		//printInformationToPlayer();
+		System.out.println("Escolha o que deseja fazer\n");
+		verificaOndeEstaJogo();
 	}
 	
 	private String readInput() {
@@ -38,6 +38,27 @@ public class Game {
 	}
 	
 	private void updateBoard(String input) {
-		main.readString(input);
+		verificaOndeEstaJogoTrata(input);
+	}
+	
+	public void verificaOndeEstaJogo() {
+		if(config.estaAi()) {
+			config.printaConfigMessages();
+		}
+		else if(!config.estaAi() && !explore.exploreIniciada()) {
+			explore.setExploreIniciada(true);
+			explore.setEstaAi(true);
+		}
+		if(explore.estaAi()) {
+			explore.printaExploreMessages();
+		}
+	}
+	
+	public void verificaOndeEstaJogoTrata(String valor) {
+		if(config.estaAi()) {
+			config.trataInput(valor);
+		}
+		if(explore.estaAi()) {
+		}
 	}
 }

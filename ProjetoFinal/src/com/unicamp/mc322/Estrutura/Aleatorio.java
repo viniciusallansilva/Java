@@ -1,6 +1,7 @@
 package com.unicamp.mc322.Estrutura;
 
 import java.util.Random;
+import java.lang.Math;
 
 public class Aleatorio {
 	private Random aleaotiro;
@@ -33,8 +34,9 @@ public class Aleatorio {
 		return numero;
 	}
 	
-	public int getNumber(int range) {
-		int numero=this.aleaotiro.nextInt(range);
+	public int getNumber(double range) {
+		int n=(int)range;
+		int numero=this.aleaotiro.nextInt(n);
 		return numero;
 	}
 	

@@ -1,47 +1,39 @@
 package com.unicamp.mc322.Movimento;
 
-import com.unicamp.mc322.Animacoes.*;
 import java.lang.Math;
 
 import java.util.ArrayList;
 
-import com.unicamp.mc322.Animacoes.Items;
-import com.unicamp.mc322.Animacoes.Pokemon;
-import com.unicamp.mc322.Estrutura.Position;
-import com.unicamp.mc322.Estrutura.Type;
+import com.unicamp.mc322.Animacoes.*;
+import com.unicamp.mc322.Estrutura.*;
 
 public class Island {
 	private final static int TAM_MAXIMO_ILHA=10;
 	private Position rightUp;
 	private Position leftDown;
+	private Position pontoNascimento;
 	
-	private ArrayList<Bridge> bridgeList;
-	private ArrayList<Elevator> elevatorList;
-	private ArrayList<Pokemon> pokemonList;
-	private ArrayList<Items> itemsList;
 	private Type IslandType;
 	private int floorQuantity; 
 	
+	private ArrayList<Position> pontosComecaPonte;
+	
 	public Island(Position newRightUp, Position newLeftDown,Type newType,int floor) {
-		this.bridgeList=new ArrayList<Bridge>();
-		this.elevatorList=new ArrayList<Elevator>();
-		this.pokemonList=new ArrayList<Pokemon>();
-		this.itemsList=new ArrayList<Items>();
 		this.rightUp=newRightUp;
 		this.leftDown=newLeftDown;
 		this.IslandType=newType;
 		this.floorQuantity=floor;
+		this.pontosComecaPonte=new ArrayList<Position>();
+		this.pontoNascimento=pontoMedio();
 	}
 	
 	public Island(Position newRightUp,Type newType,int floor) {
-		this.bridgeList=new ArrayList<Bridge>();
-		this.elevatorList=new ArrayList<Elevator>();
-		this.pokemonList=new ArrayList<Pokemon>();
-		this.itemsList=new ArrayList<Items>();
 		this.rightUp=newRightUp;
 		this.leftDown=geraOutroPontoProximo(newRightUp);
 		this.IslandType=newType;
 		this.floorQuantity=floor;
+		this.pontosComecaPonte=new ArrayList<Position>();
+		this.pontoNascimento=pontoMedio();
 	}
 	
 	public boolean pointBelongIsland(Position point) {
@@ -53,20 +45,14 @@ public class Island {
 		return false;
 	}
 	
-	
-	
-	public void addBrigde(Bridge newbridge) {
-		this.bridgeList.add(newbridge);
+	public int tamanhoArrayPontoPonte() {
+		return this.pontosComecaPonte.size();
 	}
 	
-	public void addElevator(Elevator newElevator) {
-		this.elevatorList.add(newElevator);
+	public Position getPontoIlha(int indice) {
+		return this.pontosComecaPonte.get(indice);
 	}
 	
-	private boolean pointBelongEdge() {
-		return true;
-		//desenvolver
-	}
 	
 	private Position geraOutroPontoProximo(Position primeiro) {
 		Position novo=new Position();
@@ -77,5 +63,40 @@ public class Island {
 			novo.geraNovaPosicao();
 		}
 		return novo;
+	}
+	
+	public void geraPontoBordaIlha() {
+		Aleatorio ale=new Aleatorio();
+		double x=0;
+		double y=0;
+		int number=ale.getNumber(4);
+		if(number==0) {
+			x=this.leftDown.getX();
+			y=ale.getNumber(this.rightUp.getY()-this.leftDown.getY())+this.leftDown.getY();
+			Position nova=new Position(x,y);
+			this.pontosComecaPonte.add(nova);
+		}
+		if(number==1) {
+			y=this.leftDown.getY();
+			x=ale.getNumber(this.rightUp.getX()-this.leftDown.getX())+this.leftDown.getX();
+			Position nova=new Position(x,y);
+			this.pontosComecaPonte.add(nova);
+		}
+		if(number==2) {
+			x=this.rightUp.getX();
+			y=ale.getNumber(this.rightUp.getY()-this.leftDown.getY())+this.leftDown.getY();
+			Position nova=new Position(x,y);
+			this.pontosComecaPonte.add(nova);
+		}
+		if(number==3) {
+			y=this.rightUp.getY();
+			x=ale.getNumber(this.rightUp.getX()-this.leftDown.getX())+this.leftDown.getX();
+			Position nova=new Position(x,y);
+			this.pontosComecaPonte.add(nova);
+		}
+	}
+	
+	private Position pontoMedio() {
+		return new Position((this.rightUp.getX()+this.leftDown.getX())/2,(this.rightUp.getY()+this.leftDown.getY())/2);
 	}
 }
