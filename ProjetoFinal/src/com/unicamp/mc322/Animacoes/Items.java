@@ -10,4 +10,8 @@ public class Items {
 	public Items(Position nova) {
 		this.point=nova;
 	}
+	
+	public Position getPosition() {
+		return this.point;
+	}
 }
