@@ -35,7 +35,9 @@ public class Aleatorio {
 	}
 	
 	public int getNumber(double range) {
-		int n=(int)range;
+		double a=Math.abs(range);
+		a=Math.round(a);
+		int n=(int)a;
 		int numero=this.aleaotiro.nextInt(n);
 		return numero;
 	}

@@ -1,7 +1,6 @@
 /*NESSA CLASSE SERA O CICLO PRINCIPAL DO JOGO QUE IRÁ FICAR ITERAGINDO COM O USUARIO every moment */
 package com.unicamp.mc322.Estrutura;
 
-import com.unicamp.mc322.Movimento.*;
 
 import java.util.Scanner;
 
@@ -10,7 +9,7 @@ public class Game {
 	
 	Scanner read=new Scanner(System.in);
 	Configuracao config=new Configuracao();
-	Exploration explore=new Exploration();
+	CicloJogo ciclo=new CicloJogo();
 
 	public void start() {
 		exitSelected =false;
@@ -25,8 +24,9 @@ public class Game {
 	}
 	
 	private void drawBoard() {
-		System.out.println("Escolha o que deseja fazer\n");
-		verificaOndeEstaJogo();
+		System.out.println("Digite -end- para encerrar o jogo ou\n");
+		System.out.println("Escolha o que deseja fazer:\n");
+		verificaOndeEstaJogoPrinta();
 	}
 	
 	private String readInput() {
@@ -41,24 +41,39 @@ public class Game {
 		verificaOndeEstaJogoTrata(input);
 	}
 	
-	public void verificaOndeEstaJogo() {
+	private void verificaOndeEstaJogoPrinta() {
 		if(config.estaAi()) {
 			config.printaConfigMessages();
 		}
-		else if(!config.estaAi() && !explore.exploreIniciada()) {
-			explore.setExploreIniciada(true);
-			explore.setEstaAi(true);
-		}
-		if(explore.estaAi()) {
-			explore.printaExploreMessages();
+		else {
+			if(ciclo.getIniciou()==false) {
+				ciclo.interpretaConfig(config);
+				ciclo.inicia();
+				ciclo.setInicio(true);
+				System.out.println("Mapa criado\n");
+				ciclo.printaCicloMessages();
+			}
+			else {
+				ciclo.setEstaAqui(true);
+				ciclo.printaCicloMessages();
+			}
 		}
 	}
 	
-	public void verificaOndeEstaJogoTrata(String valor) {
+	private void verificaOndeEstaJogoTrata(String valor) {
 		if(config.estaAi()) {
 			config.trataInput(valor);
 		}
-		if(explore.estaAi()) {
+		else {
+			if(ciclo.getIniciou()==false) {
+				ciclo.interpretaConfig(config);
+				ciclo.inicia();
+				ciclo.setInicio(true);
+			}
+			else {
+				ciclo.setEstaAqui(true);
+				ciclo.trataInput(valor);
+			}
 		}
 	}
 }

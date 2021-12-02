@@ -8,10 +8,11 @@ public class Configuracao{
 	private int nBridges;
 	private int nGates;
 	private int nIslands;
+	private int nElevators;
 	public Configuracao() {
 		this.estaAqui=true;
 		this.info=new Messages();
-		this.info.updateMessages("Jogar um Mundo Padrao","Gerar Aleatorio","Abri arquivo txt","");
+		this.info.updateMessages("Jogar um Mundo Padrao","Gerar Aleatorio","Abri arquivo txt","","",MomentoJogo.Config);
 	}
 	
 	public void padrao() {
@@ -21,6 +22,7 @@ public class Configuracao{
 		this.nBridges=4;
 		this.nGates=200;
 		this.nIslands=100;
+		this.nElevators=100;
 	}
 	
 	public void abreConfig() {
@@ -36,6 +38,7 @@ public class Configuracao{
 		this.nBridges=ale.getNumber(10);
 		this.nGates=ale.getNumber(400);
 		this.nIslands=ale.getNumber(200);
+		this.nElevators=ale.getNumber(200);
 	}
 	
 	public boolean estaAi() {
@@ -59,6 +62,30 @@ public class Configuracao{
 		//parte de config encerrou
 		this.estaAqui=false;
 		
+	}
+	
+	public int getNPokemons() {
+		return this.nPokemons;
+	}
+	
+	public int getNIsland() {
+		return this.nIslands;
+	}
+	
+	public int getNGates() {
+		return this.nGates;
+	}
+	
+	public int getNBridges() {
+		return this.nBridges;
+	}
+	
+	public int getNItems() {
+		return this.nItems;
+	}
+	
+	public int getNElevators() {
+		return this.nElevators;
 	}
 	
 }

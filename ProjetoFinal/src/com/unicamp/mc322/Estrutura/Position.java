@@ -37,7 +37,7 @@ public class Position {
 	}
 	
 	public void printPosition() {
-		System.out.println("Position: "+this.x+","+this.y+"\n");
+		System.out.println("Position: "+this.x+";"+this.y+"\n");
 	}
 	
 	public boolean isSamePosition(Position position) {
