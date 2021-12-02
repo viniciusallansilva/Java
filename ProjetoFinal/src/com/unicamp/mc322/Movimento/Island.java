@@ -49,17 +49,18 @@ public class Island {
 		return this.pontosComecaPonte.size();
 	}
 	
-	public Position getPontoIlha(int indice) {
+	public Position getPontoPonteIlha(int indice) {
 		return this.pontosComecaPonte.get(indice);
 	}
 	
 	
 	private Position geraOutroPontoProximo(Position primeiro) {
+		//nova posicao tem que ser menor que 10 e menor que a primeira
 		Position novo=new Position();
-		while(Math.abs(novo.getX()-primeiro.getX())<TAM_MAXIMO_ILHA) {
+		while((Math.abs(novo.getX()-primeiro.getX())<TAM_MAXIMO_ILHA)&&(novo.getX()>=primeiro.getX())) {
 			novo.geraNovaPosicao();
 		}
-		while(Math.abs(novo.getY()-primeiro.getY())<TAM_MAXIMO_ILHA) {
+		while((Math.abs(novo.getY()-primeiro.getY())<TAM_MAXIMO_ILHA)&&(novo.getY()>=primeiro.getY())) {
 			novo.geraNovaPosicao();
 		}
 		return novo;
@@ -98,5 +99,41 @@ public class Island {
 	
 	private Position pontoMedio() {
 		return new Position((this.rightUp.getX()+this.leftDown.getX())/2,(this.rightUp.getY()+this.leftDown.getY())/2);
+	}
+	
+	private void printaIsland() {
+		this.rightUp.printPosition();
+		this.leftDown.printPosition();
+		System.out.println(this.IslandType);
+	}
+	
+	public void addPontoComecaPonte(Position ponto) {
+		this.pontosComecaPonte.add(ponto);
+	}
+	public boolean ehPossivelAndar(Player jogador) {
+		Position point=jogador.getPosition();
+		point.setX(point.getX()+1);
+		if(pointBelongIsland(point)==false) {
+			System.out.println("Chegou no extremo direito da ilha, impossível mover, escolha outra opcao\n");
+			return false;
+		}
+		point.setX(point.getX()-2);
+		if(pointBelongIsland(point)==false) {
+			System.out.println("Chegou no extremo esquerdo da ilha, impossível mover, escolha outra opcao\n");
+			return false;
+		}
+		point.setX(point.getX()+1);
+		point.setX(point.getY()+1);
+		if(pointBelongIsland(point)==false) {
+			System.out.println("Chegou no máximo da ilha, impossível subir, escolha outra opcao\n");
+			return false;
+		}
+		point.setX(point.getY()-2);
+		if(pointBelongIsland(point)==false) {
+			System.out.println("Chegou no mínimo da ilha, impossível descer, escolha outra opcao\n");
+			return false;
+		}
+		point.setX(point.getY()+1);
+		return true;
 	}
 }

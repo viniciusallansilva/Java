@@ -14,9 +14,15 @@ public class Exploration {
 	private ArrayList<Elevator> elevatorList;
 	private ArrayList<Pokemon> pokemonList;
 	private ArrayList<Items> itemsList;
-	private boolean estaAqui;
-	private boolean exploreIniciada;
 	private Messages info;
+	
+	private int nPokemons;
+	private int nItems;
+	private int nBridges;
+	private int nGates;
+	private int nIslands;
+	private int nElevators;
+	private Position pontoNascimento;
 	
 	public Exploration() {
 		this.islandList=new ArrayList<Island>();
@@ -27,30 +33,31 @@ public class Exploration {
 		this.pokemonList=new ArrayList<Pokemon>();
 		this.itemsList=new ArrayList<Items>();
 		this.islandList.add(criailhaInicial());
-		this.exploreIniciada=false;
 		this.info=new Messages();
-		this.info.updateMessages("SUBIR", "DESCER","DIREITA","ESQUERDA");
+		this.pontoNascimento=new Position(100,100);
 	}
 	
 	private Island criailhaInicial() {
 		int andares=1;
 		Island primeira=new Island(new Position(95,95),new Position(105,105),new Aleatorio().getType(),andares);
+		primeira.addPontoComecaPonte(new Position(95,95));
 		return primeira;
 	}
 	
-	private void criaNilhas(int N,int andares) {
+	public void criaNilhas(int N,int andares) {
 		N=N-1;//a primeira ja foi criada
+		//crio um ponto inicial nao pertencente a uma ilha anterior
 		for(int i=0;i<N;i++) {
 			Position novo=new Position();
 			do{
 				novo.geraNovaPosicao();
 			}
 			while(this.islandList.get(i).pointBelongIsland(novo));	
-			Island nova=new Island(novo,new Aleatorio().getType(),andares);
+			this.islandList.add(new Island(novo,new Aleatorio().getType(),andares));
 		}
 	}
 	
-	private void gerarNPokemons(int N) {
+	public void gerarNPokemons(int N) {
 		Position nova=new Position();
 		boolean pontoPertenceIlha=false;
 		for(int i=0;i<N;i++) {
@@ -62,11 +69,11 @@ public class Exploration {
 					}
 				}
 			}
-			this.pokemonList.add(new Pokemon(nova));
+			//this.pokemonList.add(new Pokemon(nova));
 		}
 	}
 	
-	private void gerarNItens(int N) {
+	public void gerarNItens(int N) {
 		Position nova=new Position();
 		boolean pontoPertenceIlha=false;
 		for(int i=0;i<N;i++) {
@@ -82,9 +89,9 @@ public class Exploration {
 		}
 	}
 	
-	private void gerarNPontesNaIlha(int N) {
+	public void gerarNPontesNaIlha(int N) {
 		Position ponto1;
-		Position ponto2=this.islandList.get(0).getPontoIlha(0);
+		Position ponto2=this.islandList.get(0).getPontoPonteIlha(0);
 		for(int i=0;i<this.islandList.size();i++) {
 			for(int v=0;v<N;v++) {
 				this.islandList.get(i).geraPontoBordaIlha();
@@ -92,12 +99,12 @@ public class Exploration {
 		}
 		for(int j=0;j<this.islandList.size();j++) {
 			for(int k=0;k<this.islandList.get(j).tamanhoArrayPontoPonte();k++) {
-				ponto1=this.islandList.get(j).getPontoIlha(k);
+				ponto1=this.islandList.get(j).getPontoPonteIlha(k);
 				for(int l=0;l<this.islandList.size();l++) {
 					for(int m=0;m<this.islandList.get(l).tamanhoArrayPontoPonte();m++) {
 						if(l!=j) {
-							if(ponto1.ponto1EhMaisPerto(this.islandList.get(l).getPontoIlha(m),ponto2)) {
-								ponto2=this.islandList.get(l).getPontoIlha(m);
+							if(ponto1.ponto1EhMaisPerto(this.islandList.get(l).getPontoPonteIlha(m),ponto2)) {
+								ponto2=this.islandList.get(l).getPontoPonteIlha(m);
 							}
 						}
 					}
@@ -107,7 +114,7 @@ public class Exploration {
 		}
 	}
 	
-	private void gerarNportais(int N) {
+	public void gerarNportais(int N) {
 		Position nova=new Position();
 		boolean pontoPertenceIlha=false;
 		for(int i=0;i<N;i++) {
@@ -123,25 +130,49 @@ public class Exploration {
 		}
 	}
 	
-	public boolean estaAi() {
-		return this.estaAqui;
+	public void interpretaConfig(Configuracao config) {
+		this.nPokemons=config.getNPokemons();
+		this.nIslands=config.getNIsland();
+		this.nBridges=config.getNBridges();
+		this.nElevators=config.getNElevators();
+		this.nGates=config.getNGates();
+		this.nItems=config.getNItems();
 	}
 	
-	public void printaExploreMessages() {
-		this.info.printMessages();
+	public boolean achouItem(Player jogador) {
+		boolean achouItem=false;
+		for(int i=0;i<this.itemsList.size();i++) {
+			if(this.itemsList.get(i).getPosition().equals(jogador.getPosition())) {
+				achouItem=true;
+			}
+		}
+		return achouItem;
 	}
 	
-	public void setEstaAi(boolean aux) {
-		this.estaAqui=aux;
+	public Items pegarItems(Player jogador) {
+		for(int i=0;i<this.itemsList.size();i++) {
+			if(this.itemsList.get(i).getPosition().equals(jogador.getPosition())) {
+				return this.itemsList.get(i);
+			}
+		}
+		return this.itemsList.get(0);
 	}
 	
-	public void setExploreIniciada(boolean aux) {
-		this.estaAqui=aux;
+	public void removeItems(Items aux) {
+		this.itemsList.remove(aux);
 	}
 	
-	public boolean exploreIniciada() {
-		return this.exploreIniciada;
+	public Position getPontoNascimento() {
+		return this.pontoNascimento;
 	}
 	
+	public Island queIlhaJogadorEsta(Player jogador) {
+		for(int i=0;i<this.islandList.size();i++) {
+			if(this.islandList.get(i).pointBelongIsland(jogador.getPosition())) {
+				return this.islandList.get(i);
+			}
+		}
+		return this.islandList.get(0);
+	}
 
 }
