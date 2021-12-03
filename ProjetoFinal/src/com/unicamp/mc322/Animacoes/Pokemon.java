@@ -14,7 +14,7 @@ public class Pokemon {
 	private Dices dicesDifficulty = new Dices(2, 4);
 	private String type1;
 	private String type2;
-	private double hpStatic;
+	private double hpStatic; //Hp que vou usar como base.
 	private ArrayList<Fruit> listFruit;
 	
 	public Pokemon (Position ponto, String name, double hp, double attack, double defense, String type1, String type2, double hpStatic) {
